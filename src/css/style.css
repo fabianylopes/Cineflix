@@ -1,0 +1,8 @@
+body {
+    width: 375px;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .root {
+    width: 100vw;
+  }
