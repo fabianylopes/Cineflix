@@ -1,14 +1,18 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React from 'react';
-import Footer from './components/Footer';
-import Header from './components/Header';
 import Home from './components/Home';
+import Sessions from "./components/Sessions";
 
 export default function App() {
   return (
-    <>
-      <Header/>
-      <Home/>
-      <Footer/>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />}></Route>
+				<Route path="/sessions/:idFilm" element={<Sessions />}></Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
+
+//<Route path="/seats/:idSession" element={<Seats />}></Route>
+//<Route path="/success" element={<Success />}></Route>     

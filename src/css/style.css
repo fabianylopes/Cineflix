@@ -1,6 +1,7 @@
 body {
     width: 375px;
     font-family: 'Roboto', sans-serif;
+    padding-top: 67px;
   }
   
   .root {

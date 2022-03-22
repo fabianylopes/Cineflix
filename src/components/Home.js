@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import axios from 'axios';
+import Header from './Header';
 
 export default function Home() {
 
@@ -13,11 +15,12 @@ export default function Home() {
 
   return (
     <>
+        <Header/>
         <TitleBar>
             <Title>Selecione o filme</Title>
         </TitleBar>
         <Container>
-            {movies.map((movie) => <img src={movie.posterURL} alt=""/>)}
+            {movies.map((movie) => <Link to={`/sessions/${movie.id}`} key={movie.id}><img  src={movie.posterURL} alt=""/></Link>)}
                         
         </Container>
     </>
@@ -28,11 +31,11 @@ const TitleBar = styled.div`
     width: 100vw;
     height: 110px;
     background-color: #fff;
-    padding-top: 67px;
 
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
 `
 
 const Title = styled.h2`
