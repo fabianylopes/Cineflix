@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import styled from "styled-components";
 import axios from 'axios';
 import Footer from './Footer'
 import Header from './Header'
-import styled from "styled-components";
 
 export default function Seats() {
     const { idSession } = useParams();
@@ -50,7 +50,9 @@ export default function Seats() {
                 </InputsBox>
             </InfoBuyer>
             <ButtonBox>
-                <Button>Reservar assento(s)</Button>
+                <Link to="/success">
+                    <Button>Reservar assento(s)</Button>
+                </Link>
             </ButtonBox>
 
         </Container>
@@ -66,6 +68,8 @@ const Container = styled.div`
 
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
 `
 
 const TitleBar = styled.div`
@@ -87,8 +91,8 @@ const Title = styled.h2`
 `
 
 const SeatsMap = styled.div`
-    width: 100vw;
-    height: 300px;
+    width: 367px;
+    height: 205px;
 
     display: flex;
     flex-wrap: wrap;
@@ -103,6 +107,7 @@ const Seat = styled.div`
     background-color: #FBE192;
     border: 1px solid #F7C52B;
     border-radius: 12px;
+    cursor: pointer;
 
     font-weight: 400;
     font-size: 11px;
