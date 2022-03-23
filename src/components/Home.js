@@ -21,7 +21,6 @@ export default function Home() {
         </TitleBar>
         <Container>
             {movies.map((movie) => <Link to={`/sessions/${movie.id}`} key={movie.id}><img  src={movie.posterURL} alt=""/></Link>)}
-                        
         </Container>
     </>
   );
@@ -50,6 +49,7 @@ const Container = styled.div`
     padding-right: 24px;
 
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
     gap: 30px;
 
@@ -58,6 +58,7 @@ const Container = styled.div`
         border:solid 8px #fff;
         box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.1);
         border-radius: 3px;
+        cursor: pointer;
     }
 `
 

@@ -34,7 +34,7 @@ export default function Sessions() {
                                 
                                 {session.showtimes.map((s) => {
                                     return (
-                                        <Link to={`/seats/${session.id}`}>
+                                        <Link to={`/seats/${s.id}`}>
                                             <Time>{s.name}</Time>
                                         </Link>
                                     )}
@@ -55,6 +55,7 @@ export default function Sessions() {
 const Container = styled.div`
     padding-left: 24px;
     padding-right: 24px;
+    padding-bottom: 117px;
 `
 
 const TitleBar = styled.div`
