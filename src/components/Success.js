@@ -3,7 +3,9 @@ import styled from "styled-components";
 import React from 'react';
 import Header from './Header';
 
-export default function Success() {
+export default function Success({name}) {
+console.log(name);
+
   return (
     <>
         <Header/>
@@ -22,7 +24,7 @@ export default function Success() {
                 </Infos>
                 <Infos>
                     <Title>Comprador</Title>
-                    <Text>Nome: João da Silva Sauro <br/>CPF: 123.456.789-10</Text>
+                    <Text>Nome: {name} <br/>CPF: 123.456.789-10</Text>
                 </Infos>
             </OrderInfo>
             <ButtonBox>

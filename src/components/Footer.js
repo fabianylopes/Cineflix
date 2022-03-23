@@ -1,11 +1,14 @@
 import React from 'react';
 import styled from "styled-components";
 
-export default function Footer({ posterImg, infoSession }) {
+export default function Footer({ poster, title, date, time }) {
   return (
     <Bar>
-        <img src={posterImg} alt=""/>
-        <InfoMovie>{infoSession}</InfoMovie>
+        <img src={poster} alt=""/>
+        <InfoMovie>
+          <Info>{`${title}`}</Info>
+          <Info>{`${date} ${time}`}</Info>
+        </InfoMovie>
     </Bar>
   );
 }
@@ -13,8 +16,9 @@ export default function Footer({ posterImg, infoSession }) {
 const Bar = styled.div`
     width: 100vw;
     height: 117px;
-    background-color: #DFE6ED;
     padding: 14px 10px;
+    background-color: #DFE6ED;
+    border: 1px solid #9EADBA;
 
     display: flex;
     justify-content: flex-start;
@@ -34,9 +38,14 @@ const Bar = styled.div`
     }
 `
 
-    const InfoMovie = styled.h3`
-    color: #293845;
-    font-weight: 400;
-    font-size: 26px;
-    line-height: 30px;
+const InfoMovie = styled.div`
+
+`
+
+const Info = styled.h3`
+  color: #293845;
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 30px;
+  margin: 2px;
 `

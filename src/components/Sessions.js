@@ -47,7 +47,7 @@ export default function Sessions() {
 
             </Days>
         </Container>
-        <Footer posterImg={sessions.posterURL} infoSession={sessions.title}/>
+        <Footer poster={sessions.posterURL} title={sessions.title} date={''} time={''}/>
     </>
   )
 }

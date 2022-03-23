@@ -2,13 +2,11 @@ import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styled from "styled-components";
 import axios from 'axios';
-import Footer from './Footer'
-import Header from './Header'
+import Footer from './Footer';
+import Header from './Header';
 
 export default function Seats() {
     const { idSession } = useParams();
-
-    const [isAvailable, SetIsAvailable] = useState('available');
 
     const [seats, setSeats] = useState({});
     const [movieInfo, setMovieInfo] = useState({});
@@ -19,20 +17,17 @@ export default function Seats() {
 		promise.then(data);
 	}, []);
 
-    
     function data(response){
         setSeats(response.data.seats);
-        setMovieInfo({title: response.data.movie.title, poster: response.data.movie.posterURL})
+        setMovieInfo({
+            title: response.data.movie.title, 
+            poster: response.data.movie.posterURL,
+            date: response.data.day.date,
+            time: response.data.name
+            });
     }
 
-    function getSeat(){
-        if(isAvailable === 'available'){
-            SetIsAvailable('selected')
-        }
-        if(isAvailable === 'selected'){
-            SetIsAvailable('available')
-        }
-    }
+    console.log(seats);
 
   return (
     <>
@@ -43,7 +38,11 @@ export default function Seats() {
             </TitleBar>
 
             <SeatsMap>
-                {seats.map && seats.map((seat) => <Seat key={seat.id} className={!seat.isAvailable ? 'unavailable' : isAvailable} onClick={getSeat}>{seat.name < 10 ? `0${seat.name}` : seat.name}</Seat>)}
+                {seats.map && seats.map((seat) => {
+                    return (
+                        <Seat key={seat.id} number={seat.name} available={seat.isAvailable}/>
+                        )
+                })}
             </SeatsMap>
 
             <BuyerInfo>
@@ -61,12 +60,28 @@ export default function Seats() {
                 </Link>
             </ButtonBox>
         </Container>
-        <Footer posterImg={movieInfo.poster} infoSession={movieInfo.title}/>
+        <Footer poster={movieInfo.poster} title={movieInfo.title} date={`${movieInfo.date} - `} time={movieInfo.time}/>
     </>
-  )
+  );
 }
 
 
+function Seat({ number, available }){
+    const [isAvailable, SetIsAvailable] = useState('available');
+
+    function getSeat(){
+        if(isAvailable === 'available'){
+            SetIsAvailable('selected')
+        }
+        if(isAvailable === 'selected'){
+            SetIsAvailable('available')
+        }
+    }
+
+    return (
+        <Spot className={!available ? 'unavailable' : isAvailable} onClick={getSeat}>{number < 10 ? `0${number}` : number}</Spot>
+    );
+}
 
 const Container = styled.div`
     padding-left: 24px;
@@ -108,7 +123,7 @@ const SeatsMap = styled.div`
     gap: 8px;
 `
 
-const Seat = styled.div`
+const Spot = styled.div`
     width: 26px;
     height: 26px;
     border-radius: 12px;
