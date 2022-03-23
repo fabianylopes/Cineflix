@@ -8,10 +8,11 @@ import Header from './Header'
 export default function Seats() {
     const { idSession } = useParams();
 
-    const [seats, setSeats] = useState({});
+    const [isAvailable, SetIsAvailable] = useState('available');
 
-    const[poster, setPoster] = useState();
-    const[title, setTitle] = useState();
+    const [seats, setSeats] = useState({});
+    const [movieInfo, setMovieInfo] = useState({});
+    const [buyerInfo, setBuyerInfo] = useState({name: '', cpf: ''});
 
     useEffect(() => {
 		const promise = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/showtimes/${idSession}/seats`);
@@ -21,10 +22,17 @@ export default function Seats() {
     
     function data(response){
         setSeats(response.data.seats);
-        setPoster(response.data.movie.posterURL);
-        setTitle(response.data.movie.title);
+        setMovieInfo({title: response.data.movie.title, poster: response.data.movie.posterURL})
     }
-    
+
+    function getSeat(){
+        if(isAvailable === 'available'){
+            SetIsAvailable('selected')
+        }
+        if(isAvailable === 'selected'){
+            SetIsAvailable('available')
+        }
+    }
 
   return (
     <>
@@ -35,31 +43,30 @@ export default function Seats() {
             </TitleBar>
 
             <SeatsMap>
-
-                {seats.map && seats.map((seat) => <Seat>{seat.name < 10 ? `0${seat.name}` : seat.name}</Seat>)}
-
-                
+                {seats.map && seats.map((seat) => <Seat key={seat.id} className={!seat.isAvailable ? 'unavailable' : isAvailable} onClick={getSeat}>{seat.name < 10 ? `0${seat.name}` : seat.name}</Seat>)}
             </SeatsMap>
 
-            <InfoBuyer>
+            <BuyerInfo>
                 <InputsBox>
                     <TitleInput>Nome do comprador:</TitleInput>
-                    <Input placeholder="Digite seu nome..."></Input>
+                    <Input placeholder="Digite seu nome..." onChange={(e) => setBuyerInfo({...buyerInfo, name:e.target.value})}></Input>
                     <TitleInput>CPF do comprador:</TitleInput>
-                    <Input placeholder="Digite seu CPF..."></Input>
+                    <Input placeholder="Digite seu CPF..." onChange={(e) => setBuyerInfo({...buyerInfo, cpf:e.target.value})}></Input>
                 </InputsBox>
-            </InfoBuyer>
+            </BuyerInfo>
+
             <ButtonBox>
                 <Link to="/success">
                     <Button>Reservar assento(s)</Button>
                 </Link>
             </ButtonBox>
-
         </Container>
-        <Footer posterImg={poster} infoSession={title}/>
+        <Footer posterImg={movieInfo.poster} infoSession={movieInfo.title}/>
     </>
   )
 }
+
+
 
 const Container = styled.div`
     padding-left: 24px;
@@ -104,8 +111,6 @@ const SeatsMap = styled.div`
 const Seat = styled.div`
     width: 26px;
     height: 26px;
-    background-color: #FBE192;
-    border: 1px solid #F7C52B;
     border-radius: 12px;
     cursor: pointer;
 
@@ -120,7 +125,7 @@ const Seat = styled.div`
     text-align: center;
 `
 
-const InfoBuyer = styled.div`
+const BuyerInfo = styled.div`
     width: 100vw;
     height: 228px;
 

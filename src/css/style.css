@@ -7,3 +7,18 @@ body {
   .root {
     width: 100vw;
   }
+
+  .selected {
+    background-color: #8DD7CF;
+    border: 1px solid #1AAE9E;
+  }
+
+  .available {
+    background-color: #C3CFD9;
+    border: 1px solid #7B8B99;
+  }
+
+  .unavailable {
+    background-color: #FBE192;
+    border: 1px solid #F7C52B;
+  }

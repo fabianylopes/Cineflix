@@ -9,8 +9,22 @@ export default function Success() {
         <Header/>
         <Container>
             <TitleBar>
-                <Title>Pedido feito com sucesso!</Title>
+                <TopTitle>Pedido feito com sucesso!</TopTitle>
             </TitleBar>
+            <OrderInfo>
+                <Infos>
+                    <Title>Filme e sessão</Title>
+                    <Text>Enola Holmes <br/>24/06/2021 15:00</Text>
+                </Infos>
+                <Infos>
+                    <Title>Ingressos</Title>
+                    <Text>Assento 16</Text>
+                </Infos>
+                <Infos>
+                    <Title>Comprador</Title>
+                    <Text>Nome: João da Silva Sauro <br/>CPF: 123.456.789-10</Text>
+                </Infos>
+            </OrderInfo>
             <ButtonBox>
                 <Link to="/">
                     <Button>Voltar pra Home</Button>
@@ -43,11 +57,39 @@ const TitleBar = styled.div`
     text-align: center;
 `
 
-const Title = styled.h2`
+const TopTitle = styled.h2`
     color: #247A6B;
     font-weight: 400;
     font-size: 24px;
     line-height: 28px;
+`
+
+const OrderInfo = styled.div`
+    width: 100vw;
+    height: 382;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 50px;
+`
+
+const Infos = styled.div`
+
+`
+
+const Title = styled.h3`
+    color: #293845;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 28px;
+`
+
+const Text = styled.h3`
+    color: #293845;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 26px;
 `
 
 const ButtonBox = styled.div`
