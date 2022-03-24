@@ -45,15 +45,15 @@ export default function Seats({ booking, setBooking }) {
 
             <SeatsStatus>
                 <Status>
-                    <Spot></Spot>
+                    <SeatStatus className='selected'></SeatStatus>
                     <Text>Selecionado</Text>
                 </Status >
                 <Status>
-                    <Spot></Spot>
+                    <SeatStatus className='available'></SeatStatus>
                     <Text>Disponível</Text>
                 </Status>
                 <Status>
-                    <Spot></Spot>
+                    <SeatStatus className='unavailable'></SeatStatus>
                     <Text>Indisponível</Text>
                 </Status>
             </SeatsStatus>
@@ -148,6 +148,12 @@ const SeatsStatus = styled.div`
     
     display: flex;
     justify-content: space-between;
+`
+
+const SeatStatus = styled.div`
+    width: 26px;
+    height: 26px;
+    border-radius: 17px;
 `
 
 const Status = styled.div`
