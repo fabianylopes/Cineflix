@@ -5,7 +5,7 @@ import Header from './Header';
 
 export default function Success({ booking, setBooking }) {
     const navigate = useNavigate();
-    console.log(booking);
+    
   return (
     <>
         <Header/>
@@ -24,7 +24,7 @@ export default function Success({ booking, setBooking }) {
                 </Infos>
                 <Infos>
                     <Title>Comprador</Title>
-                    <Text>Nome: {booking.name}<br/>CPF: {booking.cpf}</Text>
+                    <Text>Nome: {booking.name}<br/>CPF: {booking.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")}</Text>
                 </Infos>
             </OrderInfo>
             <ButtonBox>
@@ -38,8 +38,7 @@ export default function Success({ booking, setBooking }) {
     setBooking({});
     navigate('/')
   }
-
-  
+ 
 }
 
 const Container = styled.div`

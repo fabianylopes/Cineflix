@@ -43,18 +43,31 @@ export default function Seats({ booking, setBooking }) {
                 })}
             </SeatsMap>
 
+            <SeatsStatus>
+                <Status>
+                    <Spot></Spot>
+                    <Text>Selecionado</Text>
+                </Status >
+                <Status>
+                    <Spot></Spot>
+                    <Text>Disponível</Text>
+                </Status>
+                <Status>
+                    <Spot></Spot>
+                    <Text>Indisponível</Text>
+                </Status>
+            </SeatsStatus>
+
             <BuyerInfo>
-                <InputsBox>
-                    <TitleInput>Nome do comprador:</TitleInput>
-                    <Input placeholder="Digite seu nome..." onChange={(e) => setBuyerInfo({...buyerInfo, name:e.target.value})}></Input>
-                    <TitleInput>CPF do comprador:</TitleInput>
-                    <Input placeholder="Digite seu CPF..." onChange={(e) => setBuyerInfo({...buyerInfo, cpf:e.target.value})}></Input>
-                </InputsBox>
-            </BuyerInfo>
+                <TitleInput>Nome do comprador:</TitleInput>
+                <Input placeholder="Digite seu nome..." onChange={(e) => setBuyerInfo({...buyerInfo, name:e.target.value})}></Input>
+                <TitleInput>CPF do comprador:</TitleInput>
+                <Input placeholder="Digite seu CPF..." onChange={(e) => setBuyerInfo({...buyerInfo, cpf:e.target.value})}></Input>
+            </BuyerInfo>            
 
             <ButtonBox>
                 <Link to="/success">
-                    <Button onClick={getData}>Reservar assento(s)</Button>
+                    <Button onClick={handleBooking}>Reservar assento(s)</Button>
                 </Link>
             </ButtonBox>
         </Container>
@@ -62,7 +75,7 @@ export default function Seats({ booking, setBooking }) {
     </>
   );
 
-  function getData(){
+  function handleBooking(){
       setBooking(
             {...booking, 
                 name: buyerInfo.name, 
@@ -75,13 +88,15 @@ export default function Seats({ booking, setBooking }) {
 }
 
 
-function Seat({ number, key }){
+function Seat({ number }){
     const [isSelected, SetIsSelected] = useState(false);
+
 
     return (
         <Spot isSelected={isSelected} onClick={() => SetIsSelected(!isSelected)}>{number < 10 ? `0${number}` : number}</Spot>
     );
 }
+
    
 
 const Container = styled.div`
@@ -121,7 +136,32 @@ const SeatsMap = styled.div`
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+`
+
+const SeatsStatus = styled.div`
+    width: 367px;
+    height: 70px;
+    padding-top: 16px;
+    padding-left: 50px;
+    padding-right: 50px;
+    
+    display: flex;
+    justify-content: space-between;
+`
+
+const Status = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`
+
+const Text = styled.h4`
+    color: #4E5A65;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 15px;
+    margin-top: 6px;
 `
 
 function spotBackground({ available, isSelected }){
@@ -164,17 +204,15 @@ const Spot = styled.div`
 `
 
 const BuyerInfo = styled.div`
-    width: 100vw;
+    width: 367px;
     height: 228px;
+    padding-left: 20px;
+    padding-right: 20px;
 
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
-    text-align: center;
-`
-
-const InputsBox = styled.div`
-    
+    gap: 8px
 `
 
 const TitleInput = styled.h3`
@@ -182,6 +220,7 @@ const TitleInput = styled.h3`
     font-weight: 400;
     font-size: 18px;
     line-height: 21px;
+    
 `
 
 const Input = styled.input`
