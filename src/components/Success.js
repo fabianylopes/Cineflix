@@ -11,22 +11,24 @@ export default function Success({ booking, setBooking }) {
         <Header/>
         <Container>
             <TitleBar>
-                <TopTitle>Pedido feito com sucesso!</TopTitle>
+                <TopTitle>Pedido feito <br/>com sucesso!</TopTitle>
             </TitleBar>
+
             <OrderInfo>
-                <Infos>
+                <div>
                     <Title>Filme e sessão</Title>
                     <Text>{booking.film} <br/>{`${booking.date} - ${booking.time}`}</Text>
-                </Infos>
-                <Infos>
+                </div>
+                <div>
                     <Title>Ingressos</Title>
                     <Text>Assento {booking.assento}</Text>
-                </Infos>
-                <Infos>
+                </div>
+                <div>
                     <Title>Comprador</Title>
-                    <Text>Nome: {booking.name}<br/>CPF: {booking.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")}</Text>
-                </Infos>
+                    <Text>Nome: {booking.name}<br/>CPF: {booking.cpf}</Text>
+                </div>
             </OrderInfo>
+            
             <ButtonBox>
                 <Button onClick={backHome}>Voltar pra Home</Button>
             </ButtonBox>
@@ -42,8 +44,6 @@ export default function Success({ booking, setBooking }) {
 }
 
 const Container = styled.div`
-    padding-left: 24px;
-    padding-right: 24px;
     padding-bottom: 117px;
 
     display: flex;
@@ -72,7 +72,8 @@ const TopTitle = styled.h2`
 
 const OrderInfo = styled.div`
     width: 100vw;
-    height: 382;
+    height: 382px;
+    padding-left: 30px;
 
     display: flex;
     flex-direction: column;
@@ -80,15 +81,12 @@ const OrderInfo = styled.div`
     gap: 50px;
 `
 
-const Infos = styled.div`
-
-`
-
 const Title = styled.h3`
     color: #293845;
     font-weight: 700;
     font-size: 24px;
     line-height: 28px;
+    margin-bottom: 6px;
 `
 
 const Text = styled.h3`
@@ -100,7 +98,7 @@ const Text = styled.h3`
 
 const ButtonBox = styled.div`
     width: 100vw;
-    height: 102px;
+    padding-top: 80px;
 
     display: flex;
     justify-content: center;
@@ -113,8 +111,8 @@ const Button = styled.button`
     height: 42px;
     background-color: #E8833A;
     border-radius: 3px;
-    cursor: pointer;
     border: none;
+    cursor: pointer;
 
     font-family: 'Roboto';
     color: #fff;
