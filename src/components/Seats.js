@@ -5,7 +5,7 @@ import axios from 'axios';
 import Footer from './Footer';
 import Header from './Header';
 
-export default function Seats() {
+export default function Seats({ booking, setBooking }) {
     const { idSession } = useParams();
 
     const [seats, setSeats] = useState({});
@@ -26,8 +26,6 @@ export default function Seats() {
             time: response.data.name
             });
     }
-
-    console.log(seats);
 
   return (
     <>
@@ -56,32 +54,35 @@ export default function Seats() {
 
             <ButtonBox>
                 <Link to="/success">
-                    <Button>Reservar assento(s)</Button>
+                    <Button onClick={getData}>Reservar assento(s)</Button>
                 </Link>
             </ButtonBox>
         </Container>
         <Footer poster={movieInfo.poster} title={movieInfo.title} date={`${movieInfo.date} - `} time={movieInfo.time}/>
     </>
   );
+
+  function getData(){
+      setBooking(
+            {...booking, 
+                name: buyerInfo.name, 
+                cpf: buyerInfo.cpf,
+                film: movieInfo.title,
+                date: movieInfo.date,
+                time: movieInfo.time
+            });
+  }
 }
 
 
-function Seat({ number, available }){
-    const [isAvailable, SetIsAvailable] = useState('available');
-
-    function getSeat(){
-        if(isAvailable === 'available'){
-            SetIsAvailable('selected')
-        }
-        if(isAvailable === 'selected'){
-            SetIsAvailable('available')
-        }
-    }
+function Seat({ number, key }){
+    const [isSelected, SetIsSelected] = useState(false);
 
     return (
-        <Spot className={!available ? 'unavailable' : isAvailable} onClick={getSeat}>{number < 10 ? `0${number}` : number}</Spot>
+        <Spot isSelected={isSelected} onClick={() => SetIsSelected(!isSelected)}>{number < 10 ? `0${number}` : number}</Spot>
     );
 }
+   
 
 const Container = styled.div`
     padding-left: 24px;
@@ -123,10 +124,32 @@ const SeatsMap = styled.div`
     gap: 8px;
 `
 
+function spotBackground({ available, isSelected }){
+    if(available){
+        return '#FBE192';
+    }
+    if(isSelected){
+        return '#8DD7CF';
+    }
+    return '#C3CFD9';
+}
+
+function spotBorder({ available, isSelected }){
+    if(available){
+        return '#7B8B99';
+    }
+    if(isSelected){
+        return '#1AAE9E';
+    }
+    return '#808F9D';
+}
+
 const Spot = styled.div`
     width: 26px;
     height: 26px;
-    border-radius: 12px;
+    border-radius: 17px;
+    background-color: ${props => spotBackground(props)};
+    border: 1px solid ${props => spotBorder(props)};
     cursor: pointer;
 
     font-weight: 400;

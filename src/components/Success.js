@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router";
 import styled from "styled-components";
 import React from 'react';
 import Header from './Header';
 
-export default function Success({name}) {
-console.log(name);
-
+export default function Success({ booking, setBooking }) {
+    const navigate = useNavigate();
+    console.log(booking);
   return (
     <>
         <Header/>
@@ -16,25 +16,30 @@ console.log(name);
             <OrderInfo>
                 <Infos>
                     <Title>Filme e sessão</Title>
-                    <Text>Enola Holmes <br/>24/06/2021 15:00</Text>
+                    <Text>{booking.film} <br/>{`${booking.date} - ${booking.time}`}</Text>
                 </Infos>
                 <Infos>
                     <Title>Ingressos</Title>
-                    <Text>Assento 16</Text>
+                    <Text>Assento {booking.assento}</Text>
                 </Infos>
                 <Infos>
                     <Title>Comprador</Title>
-                    <Text>Nome: {name} <br/>CPF: 123.456.789-10</Text>
+                    <Text>Nome: {booking.name}<br/>CPF: {booking.cpf}</Text>
                 </Infos>
             </OrderInfo>
             <ButtonBox>
-                <Link to="/">
-                    <Button>Voltar pra Home</Button>
-                </Link>
+                <Button onClick={backHome}>Voltar pra Home</Button>
             </ButtonBox>
         </Container>
     </>
   );
+
+  function backHome(){
+    setBooking({});
+    navigate('/')
+  }
+
+  
 }
 
 const Container = styled.div`
