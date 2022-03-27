@@ -11,7 +11,7 @@ export default function Header() {
 
 const Top = styled.div`
     width: 100vw;
-    height: 67px;
+    height: 68px;
     background-color: #C3CFD9;
 
     display: flex;

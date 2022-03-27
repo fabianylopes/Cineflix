@@ -8,6 +8,12 @@ body {
     width: 100vw;
   }
 
+  .loading {
+    padding: 20%;
+    display: flex;
+    justify-content: center;
+  }
+
   .available {
     background-color: #C3CFD9;
     border: 1px solid #7B8B99;

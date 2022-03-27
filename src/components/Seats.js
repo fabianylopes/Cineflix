@@ -1,16 +1,13 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from "react-router";
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import styled from "styled-components";
 import axios from 'axios';
 import Footer from './Footer';
+import Header from './Header';
+import Loading from './Loading';
 
 export default function Seats({ booking, setBooking }) {
-    const navigate = useNavigate();
-
     const { idSession } = useParams();
-
-    const [chosenSeats, setChosenSeat] = useState([35, 36, 37]);
 
     const [seats, setSeats] = useState({});
     const [movieInfo, setMovieInfo] = useState({});
@@ -19,7 +16,7 @@ export default function Seats({ booking, setBooking }) {
     useEffect(() => {
 		const promise = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/showtimes/${idSession}/seats`);
 		promise.then(data);
-	}, [idSession]);
+	}, []);
 
     function data(response){
         setSeats(response.data.seats);
@@ -31,8 +28,13 @@ export default function Seats({ booking, setBooking }) {
             });
     }
 
+    if(seats === null){
+        return <Loading/>
+    }
+
   return (
     <>
+        <Header/>
         <Container>
             <TitleBar>
                 <Title>Selecione o(s) assento(s)</Title>
@@ -63,24 +65,15 @@ export default function Seats({ booking, setBooking }) {
 
             <BuyerInfo>
                 <TitleInput>Nome do comprador:</TitleInput>
-                <Input 
-                    type="text" 
-                    placeholder="Digite seu nome..." 
-                    onChange={(e) => setBuyerInfo({...buyerInfo, name:e.target.value})} 
-                    value={buyerInfo.name}>
-                </Input>
-
+                <Input placeholder="Digite seu nome..." onChange={(e) => setBuyerInfo({...buyerInfo, name:e.target.value})}></Input>
                 <TitleInput>CPF do comprador:</TitleInput>
-                <Input 
-                    type="text" 
-                    placeholder="Digite seu CPF..." 
-                    onChange={(e) => setBuyerInfo({...buyerInfo, cpf:e.target.value})} 
-                    value={buyerInfo.cpf}>
-                </Input>
+                <Input placeholder="Digite seu CPF..." onChange={(e) => setBuyerInfo({...buyerInfo, cpf:e.target.value})}></Input>
             </BuyerInfo>            
 
             <ButtonBox>
-                <Button onClick={handleBooking}>Reservar assento(s)</Button>
+                <Link to="/success">
+                    <Button onClick={handleBooking}>Reservar assento(s)</Button>
+                </Link>
             </ButtonBox>
         </Container>
         <Footer poster={movieInfo.poster} title={movieInfo.title} date={`${movieInfo.date} - `} time={movieInfo.time}/>
@@ -94,42 +87,22 @@ export default function Seats({ booking, setBooking }) {
                 cpf: buyerInfo.cpf,
                 film: movieInfo.title,
                 date: movieInfo.date,
-                time: movieInfo.time,
-                chosenSeats: chosenSeats
+                time: movieInfo.time
             });
-        
-
-    const promise = axios.post("https://mock-api.driven.com.br/api/v5/cineflex/seats/book-many",
-    {
-        ids: chosenSeats,
-        name: booking.name,
-        cpf: booking.cpf
-    });
-
-    promise.then(check);
-    promise.catch(error => console.log(error))
-
   }
-
-  function check(){
-    navigate('/success')
-  }
- 
 }
+
 
 function Seat({ number }){
     const [isSelected, SetIsSelected] = useState(false);
-    //const [assentos, setAssentos] = useState([...assentos, number]);
 
-      
-    
-    console.log(isSelected);
-    //console.log(assentos);
 
     return (
         <Spot isSelected={isSelected} onClick={() => SetIsSelected(!isSelected)}>{number < 10 ? `0${number}` : number}</Spot>
     );
 }
+
+   
 
 const Container = styled.div`
     padding-left: 24px;
@@ -211,12 +184,12 @@ function spotBackground({ available, isSelected }){
 
 function spotBorder({ available, isSelected }){
     if(available){
-        return '#F7C52B';
+        return '#7B8B99';
     }
     if(isSelected){
         return '#1AAE9E';
     }
-    return '#7B8B99';
+    return '#808F9D';
 }
 
 const Spot = styled.div`

@@ -4,23 +4,26 @@ import React from 'react'
 import Footer from './Footer'
 import styled from "styled-components";
 import axios from 'axios';
+import BackButton from './BackButton';
+import Loading from './Loading';
 
 export default function Sessions() {
     const { idFilm } = useParams();
 
-    const [sessions, setSessions] = useState({});
+    const [sessions, setSessions] = useState(null);
 
     useEffect(() => {
 		const promise = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/movies/${idFilm}/showtimes`);
 		promise.then(response => {setSessions(response.data)});
 	}, [idFilm]);
 
-   /*  if(sessions === {}){
+    if(sessions === null){
         return <Loading/>
-    } */
+    }
 
     return (
         <> 
+            <BackButton path={'/'}/>
             <Container>
                 <TitleBar>
                     <Title>Selecione o horário</Title>

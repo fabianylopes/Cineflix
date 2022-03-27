@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import React from 'react';
+import BackButton from "./BackButton";
 
 export default function Success({ booking, setBooking }) {
     const navigate = useNavigate();
@@ -9,6 +10,7 @@ export default function Success({ booking, setBooking }) {
     
   return (
     <>
+        <BackButton path={-1}/>
         <Container>
             <TitleBar>
                 <TopTitle>Pedido feito <br/>com sucesso!</TopTitle>

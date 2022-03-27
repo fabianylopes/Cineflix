@@ -2,18 +2,19 @@ import { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import axios from 'axios';
+import Loading from './Loading';
 
 export default function Home() {
 
-    const [movies, setMovies] = useState([]);
+    const [movies, setMovies] = useState(null);
 
     useEffect(() => {
 		const promise = axios.get("https://mock-api.driven.com.br/api/v5/cineflex/movies");
 		promise.then(response => {setMovies(response.data);});
 	}, []);
 
-    if(movies === []){
-        return <h1>Carregando...</h1>
+    if(movies === null){
+        return <Loading/>
     }
 
     return (
