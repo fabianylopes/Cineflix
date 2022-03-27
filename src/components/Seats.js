@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useNavigate } from "react-router";
+import { useParams } from 'react-router-dom';
 import styled from "styled-components";
 import axios from 'axios';
 import Footer from './Footer';
-import Header from './Header';
 
 export default function Seats({ booking, setBooking }) {
+    const navigate = useNavigate();
+
     const { idSession } = useParams();
+
+    const [chosenSeats, setChosenSeat] = useState([35, 36, 37]);
 
     const [seats, setSeats] = useState({});
     const [movieInfo, setMovieInfo] = useState({});
@@ -15,7 +19,7 @@ export default function Seats({ booking, setBooking }) {
     useEffect(() => {
 		const promise = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/showtimes/${idSession}/seats`);
 		promise.then(data);
-	}, []);
+	}, [idSession]);
 
     function data(response){
         setSeats(response.data.seats);
@@ -29,7 +33,6 @@ export default function Seats({ booking, setBooking }) {
 
   return (
     <>
-        <Header/>
         <Container>
             <TitleBar>
                 <Title>Selecione o(s) assento(s)</Title>
@@ -60,15 +63,24 @@ export default function Seats({ booking, setBooking }) {
 
             <BuyerInfo>
                 <TitleInput>Nome do comprador:</TitleInput>
-                <Input placeholder="Digite seu nome..." onChange={(e) => setBuyerInfo({...buyerInfo, name:e.target.value})}></Input>
+                <Input 
+                    type="text" 
+                    placeholder="Digite seu nome..." 
+                    onChange={(e) => setBuyerInfo({...buyerInfo, name:e.target.value})} 
+                    value={buyerInfo.name}>
+                </Input>
+
                 <TitleInput>CPF do comprador:</TitleInput>
-                <Input placeholder="Digite seu CPF..." onChange={(e) => setBuyerInfo({...buyerInfo, cpf:e.target.value})}></Input>
+                <Input 
+                    type="text" 
+                    placeholder="Digite seu CPF..." 
+                    onChange={(e) => setBuyerInfo({...buyerInfo, cpf:e.target.value})} 
+                    value={buyerInfo.cpf}>
+                </Input>
             </BuyerInfo>            
 
             <ButtonBox>
-                <Link to="/success">
-                    <Button onClick={handleBooking}>Reservar assento(s)</Button>
-                </Link>
+                <Button onClick={handleBooking}>Reservar assento(s)</Button>
             </ButtonBox>
         </Container>
         <Footer poster={movieInfo.poster} title={movieInfo.title} date={`${movieInfo.date} - `} time={movieInfo.time}/>
@@ -82,28 +94,47 @@ export default function Seats({ booking, setBooking }) {
                 cpf: buyerInfo.cpf,
                 film: movieInfo.title,
                 date: movieInfo.date,
-                time: movieInfo.time
+                time: movieInfo.time,
+                chosenSeats: chosenSeats
             });
-  }
-}
+        
 
+    const promise = axios.post("https://mock-api.driven.com.br/api/v5/cineflex/seats/book-many",
+    {
+        ids: chosenSeats,
+        name: booking.name,
+        cpf: booking.cpf
+    });
+
+    promise.then(check);
+    promise.catch(error => console.log(error))
+
+  }
+
+  function check(){
+    navigate('/success')
+  }
+ 
+}
 
 function Seat({ number }){
     const [isSelected, SetIsSelected] = useState(false);
+    //const [assentos, setAssentos] = useState([...assentos, number]);
 
+      
+    
+    console.log(isSelected);
+    //console.log(assentos);
 
     return (
         <Spot isSelected={isSelected} onClick={() => SetIsSelected(!isSelected)}>{number < 10 ? `0${number}` : number}</Spot>
     );
 }
 
-   
-
 const Container = styled.div`
     padding-left: 24px;
     padding-right: 24px;
     padding-bottom: 117px;
-
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -114,7 +145,6 @@ const TitleBar = styled.div`
     width: 100vw;
     height: 110px;
     background-color: #fff;
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -131,7 +161,6 @@ const Title = styled.h2`
 const SeatsMap = styled.div`
     width: 367px;
     height: 205px;
-
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -182,12 +211,12 @@ function spotBackground({ available, isSelected }){
 
 function spotBorder({ available, isSelected }){
     if(available){
-        return '#7B8B99';
+        return '#F7C52B';
     }
     if(isSelected){
         return '#1AAE9E';
     }
-    return '#808F9D';
+    return '#7B8B99';
 }
 
 const Spot = styled.div`
@@ -197,12 +226,10 @@ const Spot = styled.div`
     background-color: ${props => spotBackground(props)};
     border: 1px solid ${props => spotBorder(props)};
     cursor: pointer;
-
     font-weight: 400;
     font-size: 11px;
     line-height: 13px;
     color: #000;
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -214,7 +241,6 @@ const BuyerInfo = styled.div`
     height: 228px;
     padding-left: 20px;
     padding-right: 20px;
-
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -237,7 +263,6 @@ const Input = styled.input`
     border: 1px solid #D5D5D5;
     border-radius: 3px;
     outline: 0;
-
     ::placeholder{
         color: #AFAFAF;
         font-style: italic;
@@ -250,7 +275,6 @@ const Input = styled.input`
 const ButtonBox = styled.div`
     width: 100vw;
     height: 102px;
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -264,13 +288,11 @@ const Button = styled.button`
     border-radius: 3px;
     cursor: pointer;
     border: none;
-
     font-family: 'Roboto';
     color: #fff;
     font-weight: 400;
     font-size: 18px;
     line-height: 21px;
-
     display: flex;
     justify-content: center;
     align-items: center;

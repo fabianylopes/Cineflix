@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import React from 'react'
 import Footer from './Footer'
-import Header from './Header'
 import styled from "styled-components";
 import axios from 'axios';
 
@@ -14,42 +13,41 @@ export default function Sessions() {
     useEffect(() => {
 		const promise = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/movies/${idFilm}/showtimes`);
 		promise.then(response => {setSessions(response.data)});
-	}, []);
+	}, [idFilm]);
 
-  return (
-    <> 
-        <Header/>
-        <Container>
-            <TitleBar>
-                <Title>Selecione o horário</Title>
-            </TitleBar>
+   /*  if(sessions === {}){
+        return <Loading/>
+    } */
 
-            <Days>
+    return (
+        <> 
+            <Container>
+                <TitleBar>
+                    <Title>Selecione o horário</Title>
+                </TitleBar>
 
-                {sessions.days && sessions.days.map((session) => {          
-                    return (
-                        <>
-                            <Day key={session.id}>{session.weekday} - {session.date}</Day>
-                            <Showtime>
-                                
-                                {session.showtimes.map((s) => {
-                                    return (
-                                        <Link to={`/seats/${s.id}`}>
-                                            <Time>{s.name}</Time>
-                                        </Link>
+                <Days>
+                    {sessions.days && sessions.days.map((session) => {          
+                        return (
+                            <>
+                                <Day key={session.id}>{session.weekday} - {session.date}</Day>
+                                <Showtime>
+                                    {session.showtimes.map((s) => {
+                                        return (
+                                            <Link to={`/seats/${s.id}`}>
+                                                <Time key={s.id}>{s.name}</Time>
+                                            </Link>
+                                        )}
                                     )}
-                                )}
-                            </Showtime>
-                        </>
-                    )  
-                            
-                })}
-
-            </Days>
-        </Container>
-        <Footer poster={sessions.posterURL} title={sessions.title} date={''} time={''}/>
-    </>
-  )
+                                </Showtime>
+                            </>
+                        );
+                    })}
+                </Days>
+            </Container>
+            <Footer poster={sessions.posterURL} title={sessions.title} date={''} time={''}/>
+        </>
+    );
 }
 
 const Container = styled.div`

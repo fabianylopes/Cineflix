@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import axios from 'axios';
-import Header from './Header';
 
 export default function Home() {
 
@@ -13,17 +12,20 @@ export default function Home() {
 		promise.then(response => {setMovies(response.data);});
 	}, []);
 
-  return (
-    <>
-        <Header/>
-        <TitleBar>
-            <Title>Selecione o filme</Title>
-        </TitleBar>
-        <Container>
-            {movies.map((movie) => <Link to={`/sessions/${movie.id}`} key={movie.id}><img  src={movie.posterURL} alt=""/></Link>)}
-        </Container>
-    </>
-  );
+    if(movies === []){
+        return <h1>Carregando...</h1>
+    }
+
+    return (
+        <>
+            <TitleBar>
+                <Title>Selecione o filme</Title>
+            </TitleBar>
+            <Container>
+                {movies.map((movie) => <Link to={`/sessions/${movie.id}`} key={movie.id}><img  src={movie.posterURL} alt=""/></Link>)}
+            </Container>
+        </>
+    );
 }
 
 const TitleBar = styled.div`
@@ -61,4 +63,3 @@ const Container = styled.div`
         cursor: pointer;
     }
 `
-

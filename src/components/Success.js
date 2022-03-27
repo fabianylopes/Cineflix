@@ -1,14 +1,14 @@
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import React from 'react';
-import Header from './Header';
 
 export default function Success({ booking, setBooking }) {
     const navigate = useNavigate();
+
+    let seats = booking.chosenSeats;
     
   return (
     <>
-        <Header/>
         <Container>
             <TitleBar>
                 <TopTitle>Pedido feito <br/>com sucesso!</TopTitle>
@@ -21,7 +21,7 @@ export default function Success({ booking, setBooking }) {
                 </div>
                 <div>
                     <Title>Ingressos</Title>
-                    <Text>Assento {booking.assento}</Text>
+                    {seats.map(seat => <Text>Assento {seat}</Text>)}
                 </div>
                 <div>
                     <Title>Comprador</Title>
