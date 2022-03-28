@@ -1,6 +1,6 @@
+import React from 'react';
 import { useNavigate } from "react-router";
 import styled from "styled-components";
-import React from 'react';
 import BackButton from "./BackButton";
 
 export default function Success({ booking, setBooking }) {
@@ -21,7 +21,7 @@ export default function Success({ booking, setBooking }) {
                 </div>
                 <div>
                     <Title>Ingressos</Title>
-                    {booking.seats.map(seat => <Text>Assento {seat}</Text>)}
+                    {booking.seats.map((seat, index) => <Text key={index}>Assento {seat}</Text>)}
                 </div>
                 <div>
                     <Title>Comprador</Title>

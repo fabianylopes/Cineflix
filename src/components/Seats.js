@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link,useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import axios from 'axios';
@@ -14,6 +14,8 @@ export default function Seats({ booking, setBooking }) {
 
     const [seats, setSeats] = useState({});
     const [selectedSeats, setSelectedSeats] = useState([]);
+    const [selectedSeatsName, setSelectedSeatsName] = useState([]);
+
     const [movieInfo, setMovieInfo] = useState({});
     const [buyerInfo, setBuyerInfo] = useState({name: '', cpf: ''});
 
@@ -33,17 +35,23 @@ export default function Seats({ booking, setBooking }) {
             });
     }
         
-    function handleSeats(id, isAvailable){
+    function handleSeats(id, name, isAvailable){
 
-        if(isAvailable){
+        if(!isAvailable){
             alert('Esse assento não está disponível');
             return;
         }
 
         if(selectedSeats.includes(id)){
-            setSelectedSeats(selectedSeats.filter(f => f === id ? false : true));
+            setSelectedSeats(selectedSeats.filter(f => (f === id) ? false : true));
         } else {
             setSelectedSeats([...selectedSeats, id]);
+        }
+
+        if(selectedSeatsName.includes(name)){
+            setSelectedSeatsName(selectedSeatsName.filter(f => (f === name) ? false : true));
+        } else {
+            setSelectedSeatsName([...selectedSeatsName, name]);
         }
        
     }
@@ -63,14 +71,14 @@ export default function Seats({ booking, setBooking }) {
                 <SeatsMap>
                     {seats.map && seats.map(({id, name, isAvailable}) => {
                         return (                      
-                            <Spot                       
+                            <Seat                       
                             key={id} 
                             isSelected={selectedSeats.includes(id)}
                             available={isAvailable} 
-                            onClick={() => handleSeats(id, isAvailable)}
+                            onClick={() => handleSeats(id, name, isAvailable)}
                             >
                             {name < 10 ? `0${name}` : name}
-                            </Spot>
+                            </Seat>
                             );
                     })}
                 </SeatsMap>
@@ -98,9 +106,7 @@ export default function Seats({ booking, setBooking }) {
                 </BuyerInfo>            
 
                 <ButtonBox>
-                    <Link to={'/success'}>
-                        <Button onClick={handleBooking}>Reservar assento(s)</Button>             
-                    </Link>
+                    <Button onClick={handleBooking}>Reservar assento(s)</Button>              
                 </ButtonBox>
             </Container>
             <Footer poster={movieInfo.poster} title={movieInfo.title} date={`${movieInfo.date} - `} time={movieInfo.time}/>
@@ -115,9 +121,19 @@ export default function Seats({ booking, setBooking }) {
                 film: movieInfo.title,
                 date: movieInfo.date,
                 time: movieInfo.time,
-                seats: selectedSeats
+                seats: selectedSeatsName
             });
-    }
+
+        const promise = axios.post('https://mock-api.driven.com.br/api/v5/cineflex/seats/book-many', 
+        {
+            ids: selectedSeatsName,
+            name: buyerInfo.name,
+            cpf: buyerInfo.cpf
+        });
+    
+        promise.then(() => navigate('/success'));
+           
+    }        
 }
 
 const Container = styled.div`
@@ -188,32 +204,32 @@ const Text = styled.h4`
     margin-top: 6px;
 `
 
-function spotBackground({ available, isSelected }){
-    if(available){
-        return '#FBE192';
-    }
+function seatBackground({ available, isSelected }){
     if(isSelected){
         return '#8DD7CF';
     }
-    return '#C3CFD9';
+    if(available){
+        return '#C3CFD9';
+    }
+    return '#FBE192';
 }
 
-function spotBorder({ available, isSelected }){
-    if(available){
-        return '#F7C52B';
-    }
+function seatBorder({ available, isSelected }){
     if(isSelected){
         return '#1AAE9E';
     }
-    return '#808F9D';
+    if(available){
+        return '#808F9D';
+    }
+    return '#F7C52B';
 }
 
-const Spot = styled.div`
+const Seat = styled.div`
     width: 26px;
     height: 26px;
     border-radius: 17px;
-    background-color: ${props => spotBackground(props)};
-    border: 1px solid ${props => spotBorder(props)};
+    background-color: ${props => seatBackground(props)};
+    border: 1px solid ${props => seatBorder(props)};
     cursor: pointer;
     font-weight: 400;
     font-size: 11px;

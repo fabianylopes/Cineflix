@@ -32,18 +32,18 @@ export default function Sessions() {
                 <Days>
                     {sessions.days && sessions.days.map((session) => {          
                         return (
-                            <>
-                                <Day key={session.id}>{session.weekday} - {session.date}</Day>
+                            <div key={session.id}>
+                                <Day >{session.weekday} - {session.date}</Day>
                                 <Showtime>
                                     {session.showtimes.map((s) => {
                                         return (
-                                            <Link to={`/seats/${s.id}`}>
-                                                <Time key={s.id}>{s.name}</Time>
+                                            <Link key={s.id} to={`/seats/${s.id}`}>
+                                                <Time>{s.name}</Time>
                                             </Link>
                                         )}
                                     )}
                                 </Showtime>
-                            </>
+                            </div>
                         );
                     })}
                 </Days>
