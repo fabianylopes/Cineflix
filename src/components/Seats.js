@@ -3,8 +3,9 @@ import { Link, useParams } from 'react-router-dom';
 import styled from "styled-components";
 import axios from 'axios';
 import Footer from './Footer';
-import Header from './Header';
 import Loading from './Loading';
+import BackButton from './BackButton';
+
 
 export default function Seats({ booking, setBooking }) {
     const { idSession } = useParams();
@@ -16,7 +17,7 @@ export default function Seats({ booking, setBooking }) {
     useEffect(() => {
 		const promise = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/showtimes/${idSession}/seats`);
 		promise.then(data);
-	}, []);
+	}, [idSession]);
 
     function data(response){
         setSeats(response.data.seats);
@@ -34,7 +35,7 @@ export default function Seats({ booking, setBooking }) {
 
   return (
     <>
-        <Header/>
+        <BackButton path={-1}/>
         <Container>
             <TitleBar>
                 <Title>Selecione o(s) assento(s)</Title>
@@ -87,18 +88,25 @@ export default function Seats({ booking, setBooking }) {
                 cpf: buyerInfo.cpf,
                 film: movieInfo.title,
                 date: movieInfo.date,
-                time: movieInfo.time
+                time: movieInfo.time,
+                chosenSeats: [35, 36]
             });
   }
 }
 
 
-function Seat({ number }){
+function Seat({ number, available }){
     const [isSelected, SetIsSelected] = useState(false);
 
+    function handleClick(){
+        SetIsSelected(!isSelected)
+        if(available){
+            alert('Esse assento não está disponível');
+        }
+    }
 
     return (
-        <Spot isSelected={isSelected} onClick={() => SetIsSelected(!isSelected)}>{number < 10 ? `0${number}` : number}</Spot>
+        <Spot isSelected={isSelected} available={available} onClick={handleClick}>{number < 10 ? `0${number}` : number}</Spot>
     );
 }
 
@@ -184,7 +192,7 @@ function spotBackground({ available, isSelected }){
 
 function spotBorder({ available, isSelected }){
     if(available){
-        return '#7B8B99';
+        return '#F7C52B';
     }
     if(isSelected){
         return '#1AAE9E';

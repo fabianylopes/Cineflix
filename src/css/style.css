@@ -9,7 +9,7 @@ body {
   }
 
   .loading {
-    padding: 20%;
+    padding: 30%;
     display: flex;
     justify-content: center;
   }
