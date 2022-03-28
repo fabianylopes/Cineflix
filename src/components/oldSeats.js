@@ -1,126 +1,163 @@
 import { useState, useEffect } from 'react';
-import { Link,useParams } from 'react-router-dom';
 import { useNavigate } from "react-router";
+import { useParams } from 'react-router-dom';
 import styled from "styled-components";
 import axios from 'axios';
+import BackButton from './BackButton';
 import Footer from './Footer';
 import Loading from './Loading';
-import BackButton from './BackButton';
 
 export default function Seats({ booking, setBooking }) {
     const navigate = useNavigate();
 
     const { idSession } = useParams();
 
-    const [seats, setSeats] = useState({});
     const [selectedSeats, setSelectedSeats] = useState([]);
+    const [buyers, setBuyers] = useState([]);
+    const [showtime, setShowtime] = useState(null);
+  
     const [movieInfo, setMovieInfo] = useState({});
     const [buyerInfo, setBuyerInfo] = useState({name: '', cpf: ''});
 
     useEffect(() => {
 		const promise = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/showtimes/${idSession}/seats`);
-		promise.then(data);
+		promise.then(response => setShowtime(response.data));
 	}, [idSession]);
 
-    function data(response){
-        
-        setSeats(response.data.seats);
-        setMovieInfo({
-            title: response.data.movie.title, 
-            poster: response.data.movie.posterURL,
-            date: response.data.day.date,
-            time: response.data.name
-            });
-    }
-        
-    function handleSeats(id, isAvailable){
-
-        if(isAvailable){
-            alert('Esse assento não está disponível');
-            return;
+   
+  
+    function handleSelectSeat(seat) {
+      if (!seat.isAvailable) {
+        alert("Esse assento não está disponível");
+        return;
+      }
+  
+      if (selectedSeats.includes(seat)) {
+        // eslint-disable-next-line no-restricted-globals
+        const confirmDelete = confirm("Quer realmente tirar o assento?");
+        if (confirmDelete) {
+          const filteredSeats = selectedSeats.filter(selectedSeat => selectedSeat.id !== seat.id);
+          setSelectedSeats(filteredSeats);
+  
+          console.log(buyers);
+  
+          const filteredBuyers = buyers.filter(buyer => buyer.idAssento !== seat.id);
+          setBuyers(filteredBuyers);
+          return;
         }
-
-        if(selectedSeats.includes(id)){
-            setSelectedSeats(selectedSeats.filter(f => f === id ? false : true));
-        } else {
-            setSelectedSeats([...selectedSeats, id]);
-        }
-       
+  
+        return;
+      }
+  
+      setSelectedSeats([...selectedSeats, seat]);
     }
-     
-    if(seats === null){
+  
+    function handleCreateBooking() {
+      const ids = selectedSeats.map(selectedSeat => selectedSeat.id);
+      const booking = {
+        ids, compradores: buyers
+      };
+  
+      if (ids.length === 0 && buyers.length === 0) {
+        alert('Preencha todas as informações');
+        return;
+      }
+  
+      const promise = axios.post("https://mock-api.driven.com.br/api/v5/cineflex/seats/book-many", booking);
+      promise.then(() => {
+        setBooking({
+          title: showtime.movie.title,
+          date: showtime.day.date,
+          time: showtime.name,
+          seats: selectedSeats,
+          buyers
+        });
+        navigate('/sucesso');
+      });
+    }
+  
+/*     function handleAddBuyer(seatId, name, cpf) {
+      setBuyers([...buyers, { idAssento: seatId, nome: name, cpf }])
+    } */
+  
+    if(showtime === null){
         return <Loading/>
     }
-
+  
     return (
         <>
             <BackButton path={-1}/>
-            <Container>
+            <Container >
                 <TitleBar>
                     <Title>Selecione o(s) assento(s)</Title>
                 </TitleBar>
-
+        
                 <SeatsMap>
-                    {seats.map && seats.map(({id, name, isAvailable}) => {
-                        return (                      
-                            <Spot                       
-                            key={id} 
-                            isSelected={selectedSeats.includes(id)}
-                            available={isAvailable} 
-                            onClick={() => handleSeats(id, isAvailable)}
-                            >
-                            {name < 10 ? `0${name}` : name}
-                            </Spot>
-                            );
-                    })}
+                {
+                    showtime.seats.map(seat => (
+                        <Spot
+                        Unavailable={!seat.isAvailable}
+                        isSelected={selectedSeats.includes(seat)}
+                        onClick={() => handleSelectSeat(seat)}
+                        >
+                        {seat.name}
+                    </Spot>
+                    ))
+                }
                 </SeatsMap>
-
+        
+        
                 <SeatsStatus>
-                    <Status>
-                        <SeatStatus className='selected'></SeatStatus>
-                        <Text>Selecionado</Text>
-                    </Status >
-                    <Status>
-                        <SeatStatus className='available'></SeatStatus>
-                        <Text>Disponível</Text>
-                    </Status>
-                    <Status>
-                        <SeatStatus className='unavailable'></SeatStatus>
-                        <Text>Indisponível</Text>
-                    </Status>
-                </SeatsStatus>
+                <Status>
+                    <SeatStatus className='selected'></SeatStatus>
+                    <Text>Selecionado</Text>
+                </Status >
+                <Status>
+                    <SeatStatus className='available'></SeatStatus>
+                    <Text>Disponível</Text>
+                </Status>
+                <Status>
+                    <SeatStatus className='unavailable'></SeatStatus>
+                    <Text>Indisponível</Text>
+                </Status>
+            </SeatsStatus>
 
+                {/* <div className="form">
+                {selectedSeats.map(selectedSeat => (
+                    <SeatBuyer seat={selectedSeat.name} seatId={selectedSeat.id} handleAddBuyer={handleAddBuyer} />
+                    ))}
+                </div>
+ */}
                 <BuyerInfo>
-                    <TitleInput>Nome do comprador:</TitleInput>
-                    <Input placeholder="Digite seu nome..." onChange={(e) => setBuyerInfo({...buyerInfo, name:e.target.value})}></Input>
-                    <TitleInput>CPF do comprador:</TitleInput>
-                    <Input placeholder="Digite seu CPF..." onChange={(e) => setBuyerInfo({...buyerInfo, cpf:e.target.value})}></Input>
-                </BuyerInfo>            
+                <TitleInput>Nome do comprador:</TitleInput>
+                <Input 
+                    type="text" 
+                    placeholder="Digite seu nome..." 
+                    onChange={(e) => setBuyerInfo({...buyerInfo, name:e.target.value})} 
+                    value={buyerInfo.name}>
+                </Input>
 
+                <TitleInput>CPF do comprador:</TitleInput>
+                <Input 
+                    type="text" 
+                    placeholder="Digite seu CPF..." 
+                    onChange={(e) => setBuyerInfo({...buyerInfo, cpf:e.target.value})} 
+                    value={buyerInfo.cpf}>
+                </Input>
+            </BuyerInfo>  
+        
                 <ButtonBox>
-                    <Link to={'/success'}>
-                        <Button onClick={handleBooking}>Reservar assento(s)</Button>             
-                    </Link>
+                    <Button onClick={handleCreateBooking}>Reservar assento(s)</Button>
                 </ButtonBox>
+        
+        
             </Container>
             <Footer poster={movieInfo.poster} title={movieInfo.title} date={`${movieInfo.date} - `} time={movieInfo.time}/>
         </>
     );
-
-    function handleBooking(){
-        setBooking(
-            {...booking, 
-                name: buyerInfo.name, 
-                cpf: buyerInfo.cpf,
-                film: movieInfo.title,
-                date: movieInfo.date,
-                time: movieInfo.time,
-                seats: selectedSeats
-            });
-    }
-}
-
-const Container = styled.div`
+  }
+  
+  const Container = styled.div`
     padding-left: 24px;
     padding-right: 24px;
     padding-bottom: 117px;
@@ -188,24 +225,24 @@ const Text = styled.h4`
     margin-top: 6px;
 `
 
-function spotBackground({ available, isSelected }){
-    if(available){
-        return '#FBE192';
+function spotBackground({ unavailable, isSelected }){
+    if(unavailable){
+        return '#C3CFD9';
     }
     if(isSelected){
         return '#8DD7CF';
     }
-    return '#C3CFD9';
+    return '#FBE192';
 }
 
-function spotBorder({ available, isSelected }){
-    if(available){
-        return '#F7C52B';
+function spotBorder({ unavailable, isSelected }){
+    if(unavailable){
+        return '#7B8B99';
     }
     if(isSelected){
         return '#1AAE9E';
     }
-    return '#808F9D';
+    return '#F7C52B';
 }
 
 const Spot = styled.div`

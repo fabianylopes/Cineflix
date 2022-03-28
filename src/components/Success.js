@@ -5,8 +5,6 @@ import BackButton from "./BackButton";
 
 export default function Success({ booking, setBooking }) {
     const navigate = useNavigate();
-
-    let seats = booking.chosenSeats;
     
   return (
     <>
@@ -23,7 +21,7 @@ export default function Success({ booking, setBooking }) {
                 </div>
                 <div>
                     <Title>Ingressos</Title>
-                    {seats.map(seat => <Text>Assento {seat}</Text>)}
+                    {booking.seats.map(seat => <Text>Assento {seat}</Text>)}
                 </div>
                 <div>
                     <Title>Comprador</Title>
