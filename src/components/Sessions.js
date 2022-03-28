@@ -25,6 +25,7 @@ export default function Sessions() {
         <> 
             <BackButton path={'/'}/>
             <Container>
+
                 <TitleBar>
                     <Title>Selecione o horário</Title>
                 </TitleBar>
@@ -41,12 +42,13 @@ export default function Sessions() {
                                                 <Time>{s.name}</Time>
                                             </Link>
                                         )}
-                                    )}
+                                        )}
                                 </Showtime>
                             </div>
                         );
                     })}
-                </Days>
+                </Days>   
+                        
             </Container>
             <Footer poster={sessions.posterURL} title={sessions.title} date={''} time={''}/>
         </>
@@ -54,9 +56,7 @@ export default function Sessions() {
 }
 
 const Container = styled.div`
-    padding-left: 24px;
-    padding-right: 24px;
-    padding-bottom: 117px;
+    overflow-y: scroll;
 `
 
 const TitleBar = styled.div`
@@ -79,8 +79,12 @@ const Title = styled.h2`
 
 const Days = styled.div`
     width: 100vw;
-    height: 112px;
+    height: 100vh;
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-bottom: 150px;
     background-color: #fff;
+    overflow-y: scroll;
 `
 
  const Day = styled.h3`
