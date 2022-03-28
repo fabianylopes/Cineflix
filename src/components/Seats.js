@@ -96,9 +96,9 @@ export default function Seats({ booking, setBooking }) {
 
                 <BuyerInfo>
                     <TitleInput>Nome do comprador:</TitleInput>
-                    <Input placeholder="Digite seu nome..." onChange={(e) => setBuyerInfo({...buyerInfo, name:e.target.value})}></Input>
+                    <Input type="text" placeholder="Digite seu nome..." onChange={(e) => setBuyerInfo({...buyerInfo, name:e.target.value})}></Input>
                     <TitleInput>CPF do comprador:</TitleInput>
-                    <Input placeholder="Digite seu CPF..." onChange={(e) => setBuyerInfo({...buyerInfo, cpf:e.target.value})}></Input>
+                    <Input type="text" placeholder="Digite seu CPF..." onChange={(e) => setBuyerInfo({...buyerInfo, cpf:e.target.value})}></Input>
                 </BuyerInfo>            
 
                 <ButtonBox onSubmit={submit}>
@@ -133,10 +133,7 @@ export default function Seats({ booking, setBooking }) {
             cpf: buyerInfo.cpf
         });
     
-        promise.then(response => {
-            navigate('/success')
-            console.log(response);
-        });
+        promise.then(() => navigate('/success'));
            
     }        
 }
