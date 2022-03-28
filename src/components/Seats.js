@@ -44,13 +44,9 @@ export default function Seats({ booking, setBooking }) {
 
         if(selectedSeats.includes(id)){
             setSelectedSeats(selectedSeats.filter(f => (f === id) ? false : true));
-        } else {
-            setSelectedSeats([...selectedSeats, id]);
-        }
-
-        if(selectedSeatsName.includes(name)){
             setSelectedSeatsName(selectedSeatsName.filter(f => (f === name) ? false : true));
         } else {
+            setSelectedSeats([...selectedSeats, id]);
             setSelectedSeatsName([...selectedSeatsName, name]);
         }
        
@@ -105,7 +101,7 @@ export default function Seats({ booking, setBooking }) {
                     <Input placeholder="Digite seu CPF..." onChange={(e) => setBuyerInfo({...buyerInfo, cpf:e.target.value})}></Input>
                 </BuyerInfo>            
 
-                <ButtonBox>
+                <ButtonBox onSubmit={submit}>
                     <Button onClick={handleBooking}>Reservar assento(s)</Button>              
                 </ButtonBox>
             </Container>
@@ -113,6 +109,12 @@ export default function Seats({ booking, setBooking }) {
         </>
     );
 
+    function submit(e){
+        e.preventDefault();
+
+
+    }
+    
     function handleBooking(){
         setBooking(
             {...booking, 
@@ -126,12 +128,15 @@ export default function Seats({ booking, setBooking }) {
 
         const promise = axios.post('https://mock-api.driven.com.br/api/v5/cineflex/seats/book-many', 
         {
-            ids: selectedSeatsName,
+            ids: selectedSeats,
             name: buyerInfo.name,
             cpf: buyerInfo.cpf
         });
     
-        promise.then(() => navigate('/success'));
+        promise.then(response => {
+            navigate('/success')
+            console.log(response);
+        });
            
     }        
 }

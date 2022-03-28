@@ -25,7 +25,7 @@ export default function Success({ booking, setBooking }) {
                 </div>
                 <div>
                     <Title>Comprador</Title>
-                    <Text>Nome: {booking.name}<br/>CPF: {booking.cpf}</Text>
+                    <Text>Nome: {booking.name}<br/>CPF: {booking.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")}</Text>
                 </div>
             </OrderInfo>
             
