@@ -101,19 +101,13 @@ export default function Seats({ booking, setBooking }) {
                     <Input type="text" placeholder="Digite seu CPF..." onChange={(e) => setBuyerInfo({...buyerInfo, cpf:e.target.value})}></Input>
                 </BuyerInfo>            
 
-                <ButtonBox onSubmit={submit}>
+                <ButtonBox>
                     <Button onClick={handleBooking}>Reservar assento(s)</Button>              
                 </ButtonBox>
             </Container>
             <Footer poster={movieInfo.poster} title={movieInfo.title} date={`${movieInfo.date} - `} time={movieInfo.time}/>
         </>
     );
-
-    function submit(e){
-        e.preventDefault();
-
-
-    }
     
     function handleBooking(){
         setBooking(
