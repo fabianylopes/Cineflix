@@ -14,7 +14,7 @@ export default function App() {
       <Header/>
       <Routes>
         <Route path="/" element={<Home />}></Route>
-				<Route path="/sessions/:idFilm" element={<Sessions />}></Route>
+	<Route path="/sessions/:idFilm" element={<Sessions />}></Route>
         <Route path="/seats/:idSession" element={<Seats booking={booking} setBooking={setBooking}/>}></Route>
         <Route path="/success" element={<Success booking={booking} setBooking={setBooking}/>}></Route>  
       </Routes>
